@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>easy 的生日众筹</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a0a2e 0%, #0d1b3e 40%, #1a0a2e 100%);
+      font-family: Georgia, serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+      overflow-x: hidden;
+    }
+
+    .star {
+      position: fixed;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.5); }
+    }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    .header { text-align: center; margin-bottom: 8px; }
+
+    .subtitle {
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: #c9a0e8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(26px, 7vw, 40px);
+      font-weight: normal;
+      letter-spacing: 2px;
+      line-height: 1.2;
+    }
+
+    .date {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #a0a8c0;
+      letter-spacing: 2px;
+    }
+
+    .flower {
+      font-size: 52px;
+      margin: 20px 0;
+      animation: pulse 2.5s ease-in-out infinite;
+      display: block;
+      text-align: center;
+    }
+
+    .quote-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(201,160,232,0.2);
+      border-radius: 16px;
+      padding: 16px 24px;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 32px;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quote-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #e8d5f5;
+      animation: fadeSlide 0.5s ease forwards;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,160,232,0.15);
+      border-radius: 24px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 380px;
+      margin-bottom: 24px;
+    }
+
+    .amount-display {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .amount-number {
+      font-size: clamp(40px, 10vw, 58px);
+      font-weight: bold;
+      color: #e8c8ff;
+      letter-spacing: -1px;
+    }
+
+    .goal-text {
+      color: #8090b0;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .bar-bg {
+      background: rgba(255,255,255,0.08);
+      border-radius: 100px;
+      height: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #c084fc, #f0abfc, #e879f9);
+      border-radius: 100px;
+      box-shadow: 0 0 12px rgba(192,132,252,0.6);
+      transition: width 1s ease;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .status-text { font-size: 13px; color: #a0a8c0; }
+    .percent { font-size: 14px; font-weight: bold; color: #c084fc; }
+
+    .remaining {
+      text-align: center;
+      font-size: 13px;
+      color: #8090b0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 16px;
+    }
+
+    .remaining span { color: #f0abfc; font-weight: bold; }
+
+    .footer-text {
+      max-width: 340px;
+      text-align: center;
+      color: #7080a0;
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .footer-text .highlight { color: #c084fc; }
+
+    .qr-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .qr-label {
+      font-size: 13px;
+      color: #a0a8c0;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .qr-img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 2px solid rgba(201,160,232,0.3);
+      box-shadow: 0 0 20px rgba(192,132,252,0.2);
+    }
+
+    .qr-name {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #8090b0;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // ✏️ 改这里：当前已筹金额
+  const CURRENT = 0;
+  const GOAL = 2000;
+</script>
+
+<script>
+  // 生成星星
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.opacity = 0.3 + Math.random() * 0.4;
+    s.style.animationDuration = (2 + Math.random() * 3) + 's';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    if (i % 3 === 0) { s.style.width = '3px'; s.style.height = '3px'; }
+    document.body.appendChild(s);
+  }
+</script>
+
+<div class="header">
+  <div class="subtitle">なにわ男子 Birthday Wish</div>
+  <h1>easy 的生日众筹</h1>
+  <div class="date">7月11日 · 北海道</div>
+</div>
+
+<span class="flower">🌸</span>
+
+<div class="quote-box">
+  <p class="quote-text" id="quote"></p>
+</div>
+
+<div class="card">
+  <div class="amount-display">
+    <div class="amount-number" id="amountNum">¥0</div>
+
+  </div>
+  <div class="bar-bg">
+    <div class="bar-fill" id="barFill" style="width:0%"></div>
+  </div>
+  <div class="status-row">
+    <span class="status-text" id="statusText"></span>
+    <span class="percent" id="percentText">0%</span>
+  </div>
+  <div class="remaining" id="remaining"></div>
+</div>
+
+<div class="qr-section">
+  <p class="qr-label">长按或截图扫码转账 💖</p>
+  <img src="qrcode.jpg" alt="微信收款码" class="qr-img" />
+  <p class="qr-name">是真的 easy</p>
+</div>
+
+<div class="footer-text">
+  转账请备注你的名字💖<br />
+  量力而行，哪怕一块钱也是爱<br />
+  <span class="highlight">赞助可获得我的专属感谢！🎁</span>
+</div>
+
+<script>
+  const quotes = [
+    "募集线下基金，善意不限金额🥹",
+    "项目进度缓慢加载，静待各位好心人🫶🏻",
+    "生日当天允许我厚脸皮一下🥺",
+    "转不转都爱你们，但转了我会更爱🤩",
+    "大家凑凑，送我去见女鹅💖",
+    "支持一下日娱女大学生梦想😋",
+    "今日份好运机制：你们都会变幸运🥺",
+  ];
+
+  let qi = 0;
+  function updateQuote() {
+    const el = document.getElementById('quote');
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.textContent = quotes[qi];
+    el.style.animation = 'fadeSlide 0.5s ease forwards';
+    qi = (qi + 1) % quotes.length;
+  }
+  updateQuote();
+  setInterval(updateQuote, 3500);
+
+  const percent = Math.min((CURRENT / GOAL) * 100, 100);
+  document.getElementById('amountNum').textContent = '¥' + CURRENT.toLocaleString();
+  document.getElementById('barFill').style.width = percent + '%';
+  document.getElementById('percentText').textContent = Math.round(percent) + '%';
+
+  const statusEl = document.getElementById('statusText');
+  const remainEl = document.getElementById('remaining');
+
+  if (percent === 0) statusEl.textContent = '😭 一分钱都没有，悲。';
+  else if (percent < 30) statusEl.textContent = '🥺 刚刚起步，感谢第一批好心人！';
+  else if (percent < 60) statusEl.textContent = '🫶 有希望了！继续！';
+  else if (percent < 90) statusEl.textContent = '🔥 快了快了！最后冲刺！';
+  else if (percent < 100) statusEl.textContent = '🔥 差一点点！！！';
+  else statusEl.textContent = '🎉 目标达成！easy 要去北海道了！！！';
+
+  if (CURRENT < GOAL) {
+    remainEl.innerHTML = '还差 <span>¥' + (GOAL - CURRENT).toLocaleString() + '</span> 就能去看道枝了 🥺';
+  } else {
+    remainEl.innerHTML = '🎉 目标达成！easy 出发北海道！';
+    remainEl.style.color = '#e879f9';
+    remainEl.style.fontWeight = 'bold';
+  }
+</script>
+
+</body>
+</html>
